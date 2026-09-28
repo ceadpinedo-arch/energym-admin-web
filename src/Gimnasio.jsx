@@ -6,6 +6,7 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
   const [logoPreview, setLogoPreview] = useState(gimnasio?.logoUrl || null);
   const [logoBase64, setLogoBase64] = useState(null);
   const [guardando, setGuardando] = useState(false);
+  const [cuota, setCuota] = useState(gimnasio?.cuota ? String(gimnasio.cuota) : '');
 
   const elegirLogo = (e) => {
     const archivo = e.target.files?.[0];
@@ -21,7 +22,9 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
   const guardar = async () => {
     setGuardando(true);
     try {
-      const body = { nombre };
+      const cuotaNum = Number(String(cuota).replace(/\D/g, ''));
+      if (!cuotaNum) { alert('Ingresá una cuota válida'); return; }
+      const body = { nombre, cuota: cuotaNum };
       if (logoBase64) body.logoBase64 = logoBase64;
       const data = await apiPatch('/api/gimnasio/me', token, body);
       onUpdate(data);
@@ -50,6 +53,8 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
       </div>
       <label>Nombre del gimnasio</label>
       <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        <label>Cuota mensual ($)</label>
+        <input inputMode="numeric" value={cuota} onChange={(e) => setCuota(e.target.value)} />
       <button onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar cambios'}</button>
     </div>
   );
