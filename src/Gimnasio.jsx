@@ -7,6 +7,8 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
   const [logoBase64, setLogoBase64] = useState(null);
   const [guardando, setGuardando] = useState(false);
   const [cuota, setCuota] = useState(gimnasio?.cuota ? String(gimnasio.cuota) : '');
+  const [whatsapp, setWhatsapp] = useState(gimnasio?.whatsapp || '');
+  const [instagram, setInstagram] = useState(gimnasio?.instagram || '');
 
   const elegirLogo = (e) => {
     const archivo = e.target.files?.[0];
@@ -24,10 +26,12 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
     try {
       const cuotaNum = Number(String(cuota).replace(/\D/g, ''));
       if (!cuotaNum) { alert('Ingresá una cuota válida'); return; }
-      const body = { nombre, cuota: cuotaNum };
+      const body = { nombre, cuota: cuotaNum, whatsapp, instagram };
       if (logoBase64) body.logoBase64 = logoBase64;
       const data = await apiPatch('/api/gimnasio/me', token, body);
       onUpdate(data);
+  setWhatsapp(data.whatsapp || '');
+  setInstagram(data.instagram || '');
       setLogoBase64(null);
       alert('Guardado');
     } catch (e) {
@@ -55,6 +59,10 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
       <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
         <label>Cuota mensual ($)</label>
         <input inputMode="numeric" value={cuota} onChange={(e) => setCuota(e.target.value)} />
+    <label>WhatsApp (con código de país, ej. 5493511234567)</label>
+    <input inputMode="numeric" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
+    <label>Instagram (usuario o link)</label>
+    <input value={instagram} onChange={(e) => setInstagram(e.target.value)} />
       <button onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar cambios'}</button>
     </div>
   );
