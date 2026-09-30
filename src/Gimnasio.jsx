@@ -9,6 +9,8 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
   const [cuota, setCuota] = useState(gimnasio?.cuota ? String(gimnasio.cuota) : '');
   const [whatsapp, setWhatsapp] = useState(gimnasio?.whatsapp || '');
   const [instagram, setInstagram] = useState(gimnasio?.instagram || '');
+  const [alias, setAlias] = useState(gimnasio?.alias || '');
+  const [cbu, setCbu] = useState(gimnasio?.cbu || '');
 
   const elegirLogo = (e) => {
     const archivo = e.target.files?.[0];
@@ -26,12 +28,16 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
     try {
       const cuotaNum = Number(String(cuota).replace(/\D/g, ''));
       if (!cuotaNum) { alert('Ingresá una cuota válida'); return; }
-      const body = { nombre, cuota: cuotaNum, whatsapp, instagram };
+      const cbuLimpio = String(cbu).replace(/\D/g, '');
+  if (cbuLimpio && cbuLimpio.length !== 22) { alert('El CBU debe tener 22 dígitos'); return; }
+  const body = { nombre, cuota: cuotaNum, whatsapp, instagram, alias, cbu };
       if (logoBase64) body.logoBase64 = logoBase64;
       const data = await apiPatch('/api/gimnasio/me', token, body);
       onUpdate(data);
   setWhatsapp(data.whatsapp || '');
   setInstagram(data.instagram || '');
+  setAlias(data.alias || '');
+  setCbu(data.cbu || '');
       setLogoBase64(null);
       alert('Guardado');
     } catch (e) {
@@ -63,6 +69,10 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
     <input inputMode="numeric" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
     <label>Instagram (usuario o link)</label>
     <input value={instagram} onChange={(e) => setInstagram(e.target.value)} />
+    <label>Alias para transferencias</label>
+    <input value={alias} onChange={(e) => setAlias(e.target.value)} />
+    <label>CBU (22 dígitos)</label>
+    <input inputMode="numeric" value={cbu} onChange={(e) => setCbu(e.target.value)} />
       <button onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar cambios'}</button>
     </div>
   );
