@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { login, apiGet } from './api';
 import Socios from './Socios';
 import Gimnasio from './Gimnasio';
+import Resumen from './Resumen';
+import Pagos from './Pagos';
+import ImportarSocios from './ImportarSocios';
 import CheckIn from './CheckIn';
 import './App.css';
 
@@ -67,33 +70,22 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
       <nav className="tabs">
         <button className={tab === 'resumen' ? 'activo' : ''} onClick={() => setTab('resumen')}>Resumen</button>
         <button className={tab === 'socios' ? 'activo' : ''} onClick={() => setTab('socios')}>Socios</button>
+    	<button className={tab === 'pagos' ? 'activo' : ''} onClick={() => setTab('pagos')}>Pagos</button>
         <button className={tab === 'gimnasio' ? 'activo' : ''} onClick={() => setTab('gimnasio')}>Gimnasio</button>
       </nav>
 
-      {tab === 'resumen' && (
-        <>
-          <section className="stats">
-            <div className="stat-card">
-              <span>Socios activos</span>
-              <strong>{socios.length}</strong>
-            </div>
-            <div className="stat-card">
-              <span>Ingresos del mes</span>
-              <strong>${(resumen.totalMes || 0).toLocaleString('es-AR')}</strong>
-            </div>
-            {vencidos > 0 && (
-              <div className="stat-card stat-warn">
-                <span>Cuotas vencidas</span>
-                <strong>{vencidos}</strong>
-              </div>
-            )}
-          </section>
-        </>
-      )}
+      {tab === 'resumen' && <Resumen token={token} />}
 
-      {tab === 'socios' && <Socios token={token} socios={socios} onRefresh={cargar} />}
+  	{tab === 'socios' && (
+    	<>
+      	<ImportarSocios token={token} onDone={cargar} />
+      	<Socios token={token} socios={socios} onRefresh={cargar} />
+    	</>
+  	)}
 
-      {tab === 'gimnasio' && (
+      {tab === 'pagos' && <Pagos token={token} />}
+
+  	{tab === 'gimnasio' && (
         <Gimnasio token={token} gimnasio={gimnasio} onUpdate={setGimnasio} />
       )}
     </div>

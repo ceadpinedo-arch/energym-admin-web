@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import { apiPatch, apiPost, apiDelete, apiGet } from './api';
 
+const soloNum = (v) => String(v || '').split('').filter((c) => c >= '0' && c <= '9').join('');
+
 export default function Socios({ token, socios, onRefresh }) {
   const [seleccionado, setSeleccionado] = useState(null);
   const [mostrarAlta, setMostrarAlta] = useState(false);
   const [altaDni, setAltaDni] = useState('');
   const [altaNombre, setAltaNombre] = useState('');
   const [altaEmail, setAltaEmail] = useState('');
+  const [altaTelefono, setAltaTelefono] = useState('');
   const [altaPassword, setAltaPassword] = useState('');
   const [altaError, setAltaError] = useState('');
   const [altaGuardando, setAltaGuardando] = useState(false);
   const [detalle, setDetalle] = useState(null);
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
+  const [telefono, setTelefono] = useState('');
   const [monto, setMonto] = useState('');
   const [periodo, setPeriodo] = useState('');
   const [guardando, setGuardando] = useState(false);
@@ -30,12 +34,14 @@ export default function Socios({ token, socios, onRefresh }) {
         dni: altaDni,
         nombre: altaNombre,
         email: altaEmail,
+        telefono: soloNum(altaTelefono),
         password: altaPassword,
       });
       await onRefresh();
       setAltaDni('');
       setAltaNombre('');
       setAltaEmail('');
+      setAltaTelefono('');
       setAltaPassword('');
       setMostrarAlta(false);
     } catch (err) {
@@ -49,12 +55,14 @@ export default function Socios({ token, socios, onRefresh }) {
     setSeleccionado(socio);
     setNombre(socio.nombre);
     setEmail(socio.email || '');
+    setTelefono(socio.telefono || '');
     setPeriodo(new Date().toISOString().slice(0, 7));
     setMonto('');
     setDetalle(null);
     try {
       const d = await apiGet(`/api/socios/${socio.id}/detalle`, token);
       setDetalle(d);
+      if (d && d.telefono) setTelefono(d.telefono);
     } catch (e) {
       console.error(e);
     }
@@ -63,7 +71,7 @@ export default function Socios({ token, socios, onRefresh }) {
   const guardarDatos = async () => {
     setGuardando(true);
     try {
-      await apiPatch(`/api/socios/${seleccionado.id}`, token, { nombre, email });
+      await apiPatch(`/api/socios/${seleccionado.id}`, token, { nombre, email, telefono: soloNum(telefono) });
       await onRefresh();
       setSeleccionado(null);
     } catch (e) {
@@ -123,6 +131,7 @@ export default function Socios({ token, socios, onRefresh }) {
             <input placeholder="DNI" value={altaDni} onChange={(e) => setAltaDni(e.target.value)} />
             <input placeholder="Nombre" value={altaNombre} onChange={(e) => setAltaNombre(e.target.value)} />
             <input placeholder="Email (opcional)" value={altaEmail} onChange={(e) => setAltaEmail(e.target.value)} />
+            <input placeholder="Teléfono con característica, sin 0 ni 15 (opcional)" value={altaTelefono} onChange={(e) => setAltaTelefono(e.target.value)} />
             <input placeholder="Contraseña" type="password" value={altaPassword} onChange={(e) => setAltaPassword(e.target.value)} />
             {altaError && <p className="error">{altaError}</p>}
             <button type="submit" disabled={altaGuardando}>{altaGuardando ? 'Creando...' : 'Crear socio'}</button>
@@ -151,6 +160,8 @@ export default function Socios({ token, socios, onRefresh }) {
           <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
           <label>Email</label>
           <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          <label>Teléfono (WhatsApp)</label>
+          <input value={telefono} placeholder="Con característica, sin 0 ni 15" onChange={(e) => setTelefono(e.target.value)} />
           <button onClick={guardarDatos} disabled={guardando}>Guardar datos</button>
 
           <hr />
