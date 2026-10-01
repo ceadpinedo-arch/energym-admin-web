@@ -7,6 +7,7 @@ import Pagos from './Pagos';
 import ImportarSocios from './ImportarSocios';
 import CheckIn from './CheckIn';
 import './App.css';
+import BotonTema from './Tema.jsx';
 
 function LoginForm({ onLogin }) {
   const [dni, setDni] = useState('');
@@ -64,7 +65,10 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
     <div className="dashboard">
       <header>
         <h1>{gimnasio?.nombre || 'Energym'}</h1>
-        <button onClick={onLogout}>Salir</button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <BotonTema />
+          <button onClick={onLogout}>Salir</button>
+        </div>
       </header>
 
       <nav className="tabs">

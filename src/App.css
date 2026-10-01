@@ -302,3 +302,41 @@ header { gap: 16px; }
 .acciones { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .btn-wa { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: var(--btn-radio, 14px); background: #25d366; color: #fff; font-weight: 600; font-size: 0.9rem; text-decoration: none; }
 .btn-wa:hover { filter: brightness(1.08); }
+
+/* Tema claro / oscuro */
+html[data-theme="light"] { color-scheme: light; --text: #6b6375; --text-h: #08060d; --bg: #fff; --border: #e5e4e7; }
+html[data-theme="dark"] { color-scheme: dark; --text: #a8a5bd; --text-h: #f3f4f6; --bg: #14131f; --border: #343250; background: #14131f; }
+html[data-theme="dark"] body { background: #14131f; }
+html[data-theme="dark"] .dashboard,
+html[data-theme="dark"] .login-card { color: #e8e6f5; }
+html[data-theme="dark"] .login-card,
+html[data-theme="dark"] .panel { background: #1e1d2e; box-shadow: 0 2px 14px rgba(0,0,0,0.4); }
+html[data-theme="dark"] .login-card h1,
+html[data-theme="dark"] .dashboard header h1,
+html[data-theme="dark"] .stat-card strong,
+html[data-theme="dark"] .boton-archivo { color: #b7aef5; }
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .fila-activa,
+html[data-theme="dark"] .badge-ok { background: #2a2745; }
+html[data-theme="dark"] .badge-ok { color: #b7aef5; }
+html[data-theme="dark"] .stat-warn,
+html[data-theme="dark"] .badge-warn { background: #4a3b12; }
+html[data-theme="dark"] .stat-warn strong,
+html[data-theme="dark"] .badge-warn { color: #f5c96a; }
+html[data-theme="dark"] .stat-card span,
+html[data-theme="dark"] .detalle label,
+html[data-theme="dark"] .login-card .sub { color: #a29fb8; }
+html[data-theme="dark"] .dashboard header button,
+html[data-theme="dark"] .tabs button,
+html[data-theme="dark"] .boton-archivo { background: #1e1d2e; border-color: #343250; color: #c9c5e6; }
+html[data-theme="dark"] .tabs button.activo { background: #534AB7; border-color: #534AB7; color: #fff; }
+html[data-theme="dark"] table tr:hover { background: #262440; }
+html[data-theme="dark"] .logo-vacio { background: #262440; color: #a29fb8; }
+html[data-theme="dark"] .error { color: #ff8a8a; }
+html[data-theme="dark"] .dashboard input,
+html[data-theme="dark"] .dashboard select,
+html[data-theme="dark"] .dashboard textarea,
+html[data-theme="dark"] .login-card input { background: #14131f; color: #e8e6f5; border: 1px solid #343250; }
+html[data-theme="dark"] .dashboard td,
+html[data-theme="dark"] .dashboard th { border-color: #343250; }
+html[data-theme="dark"] .checkin-card { color: #3d3868; }
