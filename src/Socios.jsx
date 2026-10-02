@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { apiPatch, apiPost, apiDelete, apiGet } from './api';
 import { waLink, telefonoValido } from './wa.js';
 import { armarBienvenida } from './bienvenida.js';
+import PlanSocio from './PlanSocio.jsx';
 
 const soloNum = (v) => String(v || '').split('').filter((c) => c >= '0' && c <= '9').join('');
 
@@ -172,6 +173,7 @@ export default function Socios({ token, socios, onRefresh, gimnasio }) {
 
           <hr />
 
+          {seleccionado && <PlanSocio key={seleccionado.id} token={token} socioId={seleccionado.id} />}
           <h3>Registrar pago en efectivo</h3>
           <div className="row">
             <input placeholder="Monto" type="number" value={monto} onChange={(e) => setMonto(e.target.value)} />

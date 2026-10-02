@@ -10,6 +10,7 @@ import ImportarSocios from './ImportarSocios';
 import CheckIn from './CheckIn';
 import './App.css';
 import BotonTema from './Tema.jsx';
+import Planes from './Planes.jsx';
 
 function LoginForm({ onLogin }) {
   const [dni, setDni] = useState('');
@@ -96,7 +97,10 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
       {tab === 'rutinas' && <Rutinas token={token} socios={socios} gimnasio={gimnasio} />}
 
   	{tab === 'gimnasio' && (
-        <Gimnasio token={token} gimnasio={gimnasio} onUpdate={setGimnasio} />
+        <>
+          <Gimnasio token={token} gimnasio={gimnasio} onUpdate={setGimnasio} />
+          <Planes token={token} />
+        </>
       )}
     </div>
   );

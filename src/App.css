@@ -373,3 +373,6 @@ html[data-theme="dark"] .gimnasio-panel textarea { background: #14131f; color: #
 .detalle .row input { height: 44px; margin: 0; }
 .detalle .row button { height: 44px; margin: 0; white-space: nowrap; }
 @media (max-width: 520px) { .detalle .row { grid-template-columns: minmax(0, 1fr); } }
+
+.plan-socio { margin: 14px 0; }
+.plan-socio select { margin-top: 4px; }
