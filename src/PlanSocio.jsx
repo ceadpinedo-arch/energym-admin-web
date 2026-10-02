@@ -4,7 +4,7 @@ import { apiGet, apiPut } from './api';
 const pesos = (n) => '$' + Number(n || 0).toLocaleString('es-AR');
 let cachePlanes = null;
 
-export default function PlanSocio({ token, socioId }) {
+export default function PlanSocio({ token, socioId, onPlan }) {
   const [planes, setPlanes] = useState(cachePlanes || []);
   const [planId, setPlanId] = useState('');
   const [cargando, setCargando] = useState(true);
@@ -18,11 +18,18 @@ export default function PlanSocio({ token, socioId }) {
     const pPlanes = apiGet('/api/admin/planes', token).then((l) => {
       cachePlanes = l;
       if (vivo) setPlanes(l);
+      return l;
     });
     const pDetalle = apiGet('/api/socios/' + socioId + '/detalle', token).then((d) => {
       if (vivo) setPlanId(d.planId || '');
+      return d;
     });
     Promise.all([pPlanes, pDetalle])
+      .then((r) => {
+        if (!vivo) return;
+        const pl = r[0].find((x) => x.id === r[1].planId) || null;
+        if (onPlan) onPlan(pl);
+      })
       .catch(console.error)
       .finally(() => { if (vivo) setCargando(false); });
     return () => { vivo = false; };
@@ -34,6 +41,7 @@ export default function PlanSocio({ token, socioId }) {
     try {
       await apiPut('/api/admin/socios/' + socioId + '/plan', token, { planId: valor || null });
       setMsg('Plan guardado.');
+      if (onPlan) onPlan(planes.find((p) => p.id === valor) || null);
     } catch (e) {
       setMsg('No se pudo guardar el plan.');
     }

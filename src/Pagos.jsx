@@ -61,7 +61,8 @@ export default function Pagos({ token }) {
   const mensaje = (s) => {
     const g = morosos && morosos.gimnasio;
     const cuando = s.vencimiento ? ' venció el ' + fechaCorta(s.vencimiento) : ' está vencida';
-    const valor = g && g.cuota ? ' El valor es ' + pesos(g.cuota) + '.' : '';
+    const precio = s.plan && s.plan.precio ? s.plan.precio : (g && g.cuota ? g.cuota : 0);
+    const valor = precio ? ' El valor es ' + pesos(precio) + '.' : '';
     const lugar = g && g.nombre ? g.nombre : 'el gimnasio';
     return 'Hola ' + s.nombre + ', te escribimos de ' + lugar + '. Tu cuota' + cuando + '.' + valor + ' Cualquier duda avisanos. ¡Gracias!';
   };

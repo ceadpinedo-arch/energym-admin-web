@@ -173,7 +173,7 @@ export default function Socios({ token, socios, onRefresh, gimnasio }) {
 
           <hr />
 
-          {seleccionado && <PlanSocio key={seleccionado.id} token={token} socioId={seleccionado.id} />}
+          {seleccionado && <PlanSocio key={seleccionado.id} token={token} socioId={seleccionado.id} onPlan={(p) => setMonto(p ? String(p.precio) : (gimnasio && gimnasio.cuota ? String(gimnasio.cuota) : ''))} />}
           <h3>Registrar pago en efectivo</h3>
           <div className="row">
             <input placeholder="Monto" type="number" value={monto} onChange={(e) => setMonto(e.target.value)} />
