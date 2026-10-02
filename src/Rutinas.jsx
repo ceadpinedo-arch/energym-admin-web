@@ -105,13 +105,8 @@ export default function Rutinas({ token, socios, gimnasio }) {
     setError('');
     const s = socios.find((x) => x.id === socioId);
     try {
-      await apiPost('/api/admin/socios/' + socioId + '/asignar-rutina', token, { plantillaId: p.id });
-      const primero = String(s.nombre || '').split(' ')[0];
-      const texto = 'Hola ' + primero + '! Ya cargué tu rutina "' + p.nombre + '" en la app de ' + ((gimnasio && gimnasio.nombre) || 'el gimnasio') + '. Abrila y empezá cuando quieras 💪';
-      setAviso({
-        msg: 'Rutina "' + p.nombre + '" asignada a ' + s.nombre + '.',
-        wa: telefonoValido(s.telefono) ? waLink(s.telefono, texto) : null,
-      });
+      const r = await apiPost('/api/admin/socios/' + socioId + '/asignar-rutina', token, { plantillaId: p.id });
+      setAviso({ msg: 'Rutina "' + p.nombre + '" enviada a la app de ' + s.nombre + '.', push: !!(r && r.notificado) });
     } catch (e) {
       setError('No se pudo asignar la rutina.');
     }
@@ -121,10 +116,7 @@ export default function Rutinas({ token, socios, gimnasio }) {
     <>
       {aviso && (
         <div className="aviso-ok">
-          {aviso.msg}{' '}
-          {aviso.wa
-            ? <a href={aviso.wa} target="_blank" rel="noreferrer">Avisarle por WhatsApp</a>
-            : '(No tiene teléfono cargado, no puedo armar el WhatsApp.)'}
+          {aviso.msg} {aviso.push ? 'Le llegó una notificación al celular.' : 'Va a ver la rutina cuando abra la app (no tiene notificaciones activadas).'}
         </div>
       )}
       {error && <p className="error">{error}</p>}
