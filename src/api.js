@@ -45,3 +45,13 @@ export async function apiDelete(path, token) {
   });
   if (!res.ok) throw new Error(`Error en ${path}`);
 }
+
+export async function apiPut(path, token, body) {
+  const res = await fetch(API_URL + path, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error('Error en ' + path);
+  return res.json();
+}

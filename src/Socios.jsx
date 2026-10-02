@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { apiPatch, apiPost, apiDelete, apiGet } from './api';
+import { waLink, telefonoValido } from './wa.js';
+import { armarBienvenida } from './bienvenida.js';
 
 const soloNum = (v) => String(v || '').split('').filter((c) => c >= '0' && c <= '9').join('');
 
-export default function Socios({ token, socios, onRefresh }) {
+export default function Socios({ token, socios, onRefresh, gimnasio }) {
   const [seleccionado, setSeleccionado] = useState(null);
   const [mostrarAlta, setMostrarAlta] = useState(false);
   const [altaDni, setAltaDni] = useState('');
@@ -163,6 +165,10 @@ export default function Socios({ token, socios, onRefresh }) {
           <label>Teléfono (WhatsApp)</label>
           <input value={telefono} placeholder="Con característica, sin 0 ni 15" onChange={(e) => setTelefono(e.target.value)} />
           <button onClick={guardarDatos} disabled={guardando}>Guardar datos</button>
+          <button onClick={() => {
+            if (!telefonoValido(telefono)) { alert("Este socio no tiene un teléfono válido."); return; }
+            window.open(waLink(telefono, armarBienvenida(gimnasio, nombre)), '_blank');
+          }}>Enviar bienvenida por WhatsApp</button>
 
           <hr />
 

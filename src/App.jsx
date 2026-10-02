@@ -4,6 +4,8 @@ import Socios from './Socios';
 import Gimnasio from './Gimnasio';
 import Resumen from './Resumen';
 import Pagos from './Pagos';
+import Ejercicios from './Ejercicios.jsx';
+import Rutinas from './Rutinas.jsx';
 import ImportarSocios from './ImportarSocios';
 import CheckIn from './CheckIn';
 import './App.css';
@@ -75,6 +77,8 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
         <button className={tab === 'resumen' ? 'activo' : ''} onClick={() => setTab('resumen')}>Resumen</button>
         <button className={tab === 'socios' ? 'activo' : ''} onClick={() => setTab('socios')}>Socios</button>
     	<button className={tab === 'pagos' ? 'activo' : ''} onClick={() => setTab('pagos')}>Pagos</button>
+    	<button className={tab === 'ejercicios' ? 'activo' : ''} onClick={() => setTab('ejercicios')}>Ejercicios</button>
+    	<button className={tab === 'rutinas' ? 'activo' : ''} onClick={() => setTab('rutinas')}>Rutinas</button>
         <button className={tab === 'gimnasio' ? 'activo' : ''} onClick={() => setTab('gimnasio')}>Gimnasio</button>
       </nav>
 
@@ -83,11 +87,13 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
   	{tab === 'socios' && (
     	<>
       	<ImportarSocios token={token} onDone={cargar} />
-      	<Socios token={token} socios={socios} onRefresh={cargar} />
+      	<Socios token={token} socios={socios} onRefresh={cargar} gimnasio={gimnasio} />
     	</>
   	)}
 
       {tab === 'pagos' && <Pagos token={token} />}
+      {tab === 'ejercicios' && <Ejercicios token={token} />}
+      {tab === 'rutinas' && <Rutinas token={token} socios={socios} gimnasio={gimnasio} />}
 
   	{tab === 'gimnasio' && (
         <Gimnasio token={token} gimnasio={gimnasio} onUpdate={setGimnasio} />

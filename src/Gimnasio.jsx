@@ -11,6 +11,8 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
   const [instagram, setInstagram] = useState(gimnasio?.instagram || '');
   const [alias, setAlias] = useState(gimnasio?.alias || '');
   const [cbu, setCbu] = useState(gimnasio?.cbu || '');
+  const [linkApp, setLinkApp] = useState(gimnasio?.linkApp || '');
+  const [mensajeBienvenida, setMensajeBienvenida] = useState(gimnasio?.mensajeBienvenida || '');
 
   const elegirLogo = (e) => {
     const archivo = e.target.files?.[0];
@@ -30,7 +32,7 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
       if (!cuotaNum) { alert('Ingresá una cuota válida'); return; }
       const cbuLimpio = String(cbu).replace(/\D/g, '');
   if (cbuLimpio && cbuLimpio.length !== 22) { alert('El CBU debe tener 22 dígitos'); return; }
-  const body = { nombre, cuota: cuotaNum, whatsapp, instagram, alias, cbu };
+  const body = { nombre, cuota: cuotaNum, whatsapp, instagram, alias, cbu, linkApp, mensajeBienvenida };
       if (logoBase64) body.logoBase64 = logoBase64;
       const data = await apiPatch('/api/gimnasio/me', token, body);
       onUpdate(data);
@@ -38,6 +40,8 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
   setInstagram(data.instagram || '');
   setAlias(data.alias || '');
   setCbu(data.cbu || '');
+  setLinkApp(data.linkApp || '');
+  setMensajeBienvenida(data.mensajeBienvenida || '');
       setLogoBase64(null);
       alert('Guardado');
     } catch (e) {
@@ -73,6 +77,10 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
     <input value={alias} onChange={(e) => setAlias(e.target.value)} />
     <label>CBU (22 dígitos)</label>
     <input inputMode="numeric" value={cbu} onChange={(e) => setCbu(e.target.value)} />
+    <label>Enlace de Play Store (se agrega cuando la app esté publicada)</label>
+    <input value={linkApp} placeholder="https://play.google.com/store/apps/details?id=..." onChange={(e) => setLinkApp(e.target.value)} />
+    <label>Mensaje de bienvenida (variables: {'{nombre}'}, {'{gimnasio}'}, {'{link}'})</label>
+    <textarea rows={5} value={mensajeBienvenida} placeholder="Si lo dejás vacío se usa el mensaje por defecto" onChange={(e) => setMensajeBienvenida(e.target.value)} />
       <button onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar cambios'}</button>
     </div>
   );

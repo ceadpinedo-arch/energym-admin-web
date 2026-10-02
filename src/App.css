@@ -340,3 +340,36 @@ html[data-theme="dark"] .login-card input { background: #14131f; color: #e8e6f5;
 html[data-theme="dark"] .dashboard td,
 html[data-theme="dark"] .dashboard th { border-color: #343250; }
 html[data-theme="dark"] .checkin-card { color: #3d3868; }
+
+/* Ejercicios y rutinas */
+.campo { padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; font: inherit; width: 100%; box-sizing: border-box; }
+.form-ej { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.acciones { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.btn-pri { padding: 10px 16px; border: none; border-radius: 8px; background: #534AB7; color: #fff; font-weight: 600; cursor: pointer; }
+.btn-sec { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: inherit; cursor: pointer; }
+.ej-thumb { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
+.item-fila { display: grid; grid-template-columns: 2fr 1fr 80px 100px auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+@media (max-width: 760px) { .item-fila { grid-template-columns: 1fr 1fr; } }
+.plantilla { padding: 12px 0; border-top: 1px solid var(--border); }
+.plantilla:first-of-type { border-top: none; }
+.chico { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+.aviso-ok { background: #dcfce7; color: #166534; padding: 10px 14px; border-radius: 10px; margin-bottom: 12px; }
+html[data-theme="dark"] .aviso-ok { background: #14301f; color: #86efac; }
+
+.gimnasio-panel textarea { width: 100%; box-sizing: border-box; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; font: inherit; resize: vertical; }
+html[data-theme="dark"] .gimnasio-panel textarea { background: #14131f; color: #e8e6f5; border-color: #343250; }
+
+/* Ajuste Socios */
+.dashboard { max-width: 1280px; margin-left: auto; margin-right: auto; }
+.socios-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 900px) { .socios-layout { grid-template-columns: minmax(0, 1fr); } }
+.socios-layout table { width: 100%; font-size: 15px; }
+.socios-layout th, .socios-layout td { padding: 12px 10px; text-align: left; }
+.socios-layout h2 { font-size: 22px; }
+
+.detalle input, .detalle select { width: 100%; box-sizing: border-box; min-width: 0; }
+.detalle > button { margin: 12px 8px 0 0; }
+.detalle .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.detalle .row input { height: 44px; margin: 0; }
+.detalle .row button { height: 44px; margin: 0; white-space: nowrap; }
+@media (max-width: 520px) { .detalle .row { grid-template-columns: minmax(0, 1fr); } }
