@@ -6,7 +6,7 @@ export async function login(dni, password) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ dni, password }),
   });
-  if (!res.ok) throw new Error('DNI o contraseña incorrectos');
+  if (!res.ok) { let m = 'DNI o contrase\u00f1a incorrectos'; try { const j = await res.json(); if (j && j.suspendido) m = j.error; } catch (e) { m = m; } throw new Error(m); }
   return res.json();
 }
 

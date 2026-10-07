@@ -114,8 +114,8 @@ export default function Ejercicios({ token }) {
                     <td>{e.descripcion || ''}</td>
                     <td>
                       <div className="acciones">
-                        <button className="btn-sec" onClick={() => editar(e)}>Editar</button>
-                        <button className="btn-sec" onClick={() => borrar(e)}>Borrar</button>
+                        {e.editable === false ? <span className="chico">Biblioteca base</span> : <button className="btn-sec" onClick={() => editar(e)}>Editar</button>}
+                        {e.editable !== false && <button className="btn-sec" onClick={() => borrar(e)}>Borrar</button>}
                       </div>
                     </td>
                   </tr>

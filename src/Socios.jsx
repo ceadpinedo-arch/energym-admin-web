@@ -105,6 +105,20 @@ export default function Socios({ token, socios, onRefresh, gimnasio }) {
     }
   };
 
+  const restablecerClave = async () => {
+    if (!seleccionado) return;
+    if (!window.confirm('Se genera una contraseña nueva para ' + seleccionado.nombre + ' y la actual deja de funcionar. ¿Continuar?')) return;
+    setGuardando(true);
+    try {
+      const r = await apiPost('/api/claves/socio/' + seleccionado.id, token, {});
+      window.prompt('Contraseña nueva de ' + seleccionado.nombre + '. Copiala y pasásela al socio (no se vuelve a mostrar):', r.password);
+    } catch (e) {
+      window.alert('No se pudo restablecer la contraseña.');
+    } finally {
+      setGuardando(false);
+    }
+  };
+
   const eliminar = async () => {
     if (!confirm(`¿Dar de baja a ${seleccionado.nombre}? No se puede deshacer.`)) return;
     setGuardando(true);
@@ -193,6 +207,7 @@ export default function Socios({ token, socios, onRefresh, gimnasio }) {
           ) : <p>Cargando...</p>}
 
           <hr />
+          <button onClick={restablecerClave} disabled={guardando}>Restablecer contraseña</button>
           <button className="peligro" onClick={eliminar} disabled={guardando}>Dar de baja socio</button>
         </div>
       )}

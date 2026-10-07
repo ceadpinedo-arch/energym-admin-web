@@ -1,3 +1,5 @@
+import Cobros from './Cobros.jsx';
+import Kiosco from './Kiosco.jsx';
 import { useEffect, useState } from 'react';
 import { login, apiGet } from './api';
 import Socios from './Socios';
@@ -11,6 +13,7 @@ import CheckIn from './CheckIn';
 import './App.css';
 import BotonTema from './Tema.jsx';
 import Planes from './Planes.jsx';
+import Gimnasios from './Gimnasios.jsx';
 
 function LoginForm({ onLogin }) {
   const [dni, setDni] = useState('');
@@ -30,7 +33,7 @@ function LoginForm({ onLogin }) {
       }
       onLogin(data);
     } catch (err) {
-      setError('DNI o contraseña incorrectos.');
+      setError(err && err.message && err.message.indexOf('suspendido') >= 0 ? err.message : 'DNI o contrase\u00f1a incorrectos.');
     } finally {
       setCargando(false);
     }
@@ -53,7 +56,8 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
   const [socios, setSocios] = useState([]);
   const [resumen, setResumen] = useState({ totalMes: 0 });
   const [gimnasio, setGimnasio] = useState(gimnasioInicial);
-  const [tab, setTab] = useState('resumen');
+  const [tab, setTab] = useState(window.location.search.indexOf('mp=') >= 0 ? 'cobros' : 'resumen');
+  const [esSuper, setEsSuper] = useState(false);
 
   const cargar = async () => {
     apiGet('/api/socios', token).then(setSocios).catch(console.error);
@@ -61,6 +65,7 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
   };
 
   useEffect(() => { cargar(); }, [token]);
+  useEffect(() => { apiGet('/api/superadmin/yo', token).then((r) => setEsSuper(!!r.super)).catch(() => setEsSuper(false)); }, [token]);
 
   const vencidos = socios.filter((s) => s.estadoPago === 'VENCIDO').length;
 
@@ -81,6 +86,9 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
     	<button className={tab === 'ejercicios' ? 'activo' : ''} onClick={() => setTab('ejercicios')}>Ejercicios</button>
     	<button className={tab === 'rutinas' ? 'activo' : ''} onClick={() => setTab('rutinas')}>Rutinas</button>
         <button className={tab === 'gimnasio' ? 'activo' : ''} onClick={() => setTab('gimnasio')}>Gimnasio</button>
+        {!esSuper && <button className={tab === 'kiosco' ? 'activo' : ''} onClick={() => setTab('kiosco')}>Ingreso DNI</button>}
+        {!esSuper && <button className={tab === 'cobros' ? 'activo' : ''} onClick={() => setTab('cobros')}>Cobros</button>}
+        {esSuper && <button className={tab === 'gimnasios' ? 'activo' : ''} onClick={() => setTab('gimnasios')}>Gimnasios</button>}
       </nav>
 
       {tab === 'resumen' && <Resumen token={token} />}
@@ -93,6 +101,9 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
   	)}
 
       {tab === 'pagos' && <Pagos token={token} />}
+      {tab === 'kiosco' && <Kiosco token={token} />}
+      {tab === 'cobros' && <Cobros token={token} />}
+      {tab === 'gimnasios' && esSuper && <Gimnasios token={token} />}
       {tab === 'ejercicios' && <Ejercicios token={token} />}
       {tab === 'rutinas' && <Rutinas token={token} socios={socios} gimnasio={gimnasio} />}
 
