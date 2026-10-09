@@ -9,6 +9,7 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
   const [cuota, setCuota] = useState(gimnasio?.cuota ? String(gimnasio.cuota) : '');
   const [whatsapp, setWhatsapp] = useState(gimnasio?.whatsapp || '');
   const [instagram, setInstagram] = useState(gimnasio?.instagram || '');
+  const [spotifyUrl, setSpotifyUrl] = useState(gimnasio?.spotifyUrl || '');
   const [alias, setAlias] = useState(gimnasio?.alias || '');
   const [cbu, setCbu] = useState(gimnasio?.cbu || '');
   const [linkApp, setLinkApp] = useState(gimnasio?.linkApp || '');
@@ -32,12 +33,13 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
       if (!cuotaNum) { alert('Ingresá una cuota válida'); return; }
       const cbuLimpio = String(cbu).replace(/\D/g, '');
   if (cbuLimpio && cbuLimpio.length !== 22) { alert('El CBU debe tener 22 dígitos'); return; }
-  const body = { nombre, cuota: cuotaNum, whatsapp, instagram, alias, cbu, linkApp, mensajeBienvenida };
+  const body = { nombre, cuota: cuotaNum, whatsapp, instagram, alias, cbu, linkApp, mensajeBienvenida, spotifyUrl };
       if (logoBase64) body.logoBase64 = logoBase64;
       const data = await apiPatch('/api/gimnasio/me', token, body);
       onUpdate(data);
   setWhatsapp(data.whatsapp || '');
   setInstagram(data.instagram || '');
+  setSpotifyUrl(data.spotifyUrl || '');
   setAlias(data.alias || '');
   setCbu(data.cbu || '');
   setLinkApp(data.linkApp || '');
@@ -73,6 +75,8 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
     <input inputMode="numeric" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
     <label>Instagram (usuario o link)</label>
     <input value={instagram} onChange={(e) => setInstagram(e.target.value)} />
+    <label>Playlist de Spotify (enlace)</label>
+    <input value={spotifyUrl} onChange={(e) => setSpotifyUrl(e.target.value)} placeholder="https://open.spotify.com/playlist/..." />
     <label>Alias para transferencias</label>
     <input value={alias} onChange={(e) => setAlias(e.target.value)} />
     <label>CBU (22 dígitos)</label>

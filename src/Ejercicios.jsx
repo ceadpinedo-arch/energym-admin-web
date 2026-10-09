@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiGet, apiPost, apiPut, apiDelete } from './api';
 
-const vacio = { nombre: '', grupoMuscular: '', descripcion: '', imagenUrl: '' };
+const vacio = { nombre: '', grupoMuscular: '', descripcion: '', imagenUrl: '', videoUrl: '' };
 const etiqueta = (g) => String(g).charAt(0) + String(g).slice(1).toLowerCase().split('_').join(' ');
 
 export default function Ejercicios({ token }) {
@@ -22,6 +22,25 @@ export default function Ejercicios({ token }) {
     apiGet('/api/admin/grupos', token).then(setGrupos).catch(console.error);
   }, [token]);
 
+  const elegirImagen = (ev) => {
+    const f = ev.target.files && ev.target.files[0];
+    if (!f) return;
+    const lector = new FileReader();
+    lector.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, 800 / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * k);
+        c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        setForm((prev) => ({ ...prev, imagenUrl: c.toDataURL('image/jpeg', 0.8) }));
+      };
+      img.src = lector.result;
+    };
+    lector.readAsDataURL(f);
+  };
+
   const guardar = async () => {
     setError('');
     if (!form.nombre.trim() || !form.grupoMuscular) {
@@ -33,6 +52,7 @@ export default function Ejercicios({ token }) {
       grupoMuscular: form.grupoMuscular,
       descripcion: form.descripcion.trim() || null,
       imagenUrl: form.imagenUrl.trim() || null,
+      videoUrl: form.videoUrl.trim() || null,
     };
     try {
       if (editId) await apiPut('/api/admin/ejercicios/' + editId, token, body);
@@ -47,7 +67,7 @@ export default function Ejercicios({ token }) {
 
   const editar = (e) => {
     setEditId(e.id);
-    setForm({ nombre: e.nombre, grupoMuscular: e.grupoMuscular, descripcion: e.descripcion || '', imagenUrl: e.imagenUrl || '' });
+    setForm({ nombre: e.nombre, grupoMuscular: e.grupoMuscular, descripcion: e.descripcion || '', imagenUrl: e.imagenUrl || '', videoUrl: e.videoUrl || '' });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -80,7 +100,12 @@ export default function Ejercicios({ token }) {
             {grupos.map((g) => <option key={g} value={g}>{etiqueta(g)}</option>)}
           </select>
           <input className="campo" placeholder="Descripción (opcional)" value={form.descripcion} onChange={(e) => setForm({ ...form, descripcion: e.target.value })} />
-          <input className="campo" placeholder="URL de la imagen (opcional)" value={form.imagenUrl} onChange={(e) => setForm({ ...form, imagenUrl: e.target.value })} />
+          <div className="campo" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {form.imagenUrl ? <img className="ej-thumb" src={form.imagenUrl} alt="" /> : null}
+            <input type="file" accept="image/*" onChange={elegirImagen} />
+            {form.imagenUrl ? <button type="button" className="btn-sec" onClick={() => setForm({ ...form, imagenUrl: "" })}>Quitar foto</button> : null}
+          </div>
+          <input className="campo" placeholder="Enlace de video, ej. YouTube (opcional)" value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })} />
         </div>
         {error && <p className="error">{error}</p>}
         <div className="acciones">
