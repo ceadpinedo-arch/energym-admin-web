@@ -9,6 +9,10 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
   const [cuota, setCuota] = useState(gimnasio?.cuota ? String(gimnasio.cuota) : '');
   const [whatsapp, setWhatsapp] = useState(gimnasio?.whatsapp || '');
   const [instagram, setInstagram] = useState(gimnasio?.instagram || '');
+  const [facebook, setFacebook] = useState(gimnasio?.facebook || '');
+  const [tiktok, setTiktok] = useState(gimnasio?.tiktok || '');
+  const [redX, setRedX] = useState(gimnasio?.redX || '');
+  const [hashtag, setHashtag] = useState(gimnasio?.hashtag || '');
   const [spotifyUrl, setSpotifyUrl] = useState(gimnasio?.spotifyUrl || '');
   const [alias, setAlias] = useState(gimnasio?.alias || '');
   const [cbu, setCbu] = useState(gimnasio?.cbu || '');
@@ -33,12 +37,16 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
       if (!cuotaNum) { alert('Ingresá una cuota válida'); return; }
       const cbuLimpio = String(cbu).replace(/\D/g, '');
   if (cbuLimpio && cbuLimpio.length !== 22) { alert('El CBU debe tener 22 dígitos'); return; }
-  const body = { nombre, cuota: cuotaNum, whatsapp, instagram, alias, cbu, linkApp, mensajeBienvenida, spotifyUrl };
+  const body = { nombre, cuota: cuotaNum, whatsapp, instagram, facebook, tiktok, redX, hashtag, alias, cbu, linkApp, mensajeBienvenida, spotifyUrl };
       if (logoBase64) body.logoBase64 = logoBase64;
       const data = await apiPatch('/api/gimnasio/me', token, body);
       onUpdate(data);
   setWhatsapp(data.whatsapp || '');
   setInstagram(data.instagram || '');
+  setFacebook(data.facebook || '');
+  setTiktok(data.tiktok || '');
+  setRedX(data.redX || '');
+  setHashtag(data.hashtag || '');
   setSpotifyUrl(data.spotifyUrl || '');
   setAlias(data.alias || '');
   setCbu(data.cbu || '');
@@ -75,6 +83,14 @@ export default function Gimnasio({ token, gimnasio, onUpdate }) {
     <input inputMode="numeric" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
     <label>Instagram (usuario o link)</label>
     <input value={instagram} onChange={(e) => setInstagram(e.target.value)} />
+	<label>Facebook (página o link)</label>
+	<input value={facebook} onChange={(e) => setFacebook(e.target.value)} />
+	<label>TikTok (usuario o link)</label>
+	<input value={tiktok} onChange={(e) => setTiktok(e.target.value)} />
+	<label>X (usuario o link)</label>
+	<input value={redX} onChange={(e) => setRedX(e.target.value)} />
+	<label>Hashtag del gimnasio (sin #)</label>
+	<input value={hashtag} onChange={(e) => setHashtag(e.target.value)} placeholder="Ej: Energym" />
     <label>Playlist de Spotify (enlace)</label>
     <input value={spotifyUrl} onChange={(e) => setSpotifyUrl(e.target.value)} placeholder="https://open.spotify.com/playlist/..." />
     <label>Alias para transferencias</label>
