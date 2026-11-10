@@ -5,6 +5,7 @@ import { login, apiGet } from './api';
 import Socios from './Socios';
 import Gimnasio from './Gimnasio';
 import Resumen from './Resumen';
+import Estadisticas from './Estadisticas.jsx';
 import Pagos from './Pagos';
 import Ejercicios from './Ejercicios.jsx';
 import Rutinas from './Rutinas.jsx';
@@ -83,6 +84,7 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
         <button className={tab === 'resumen' ? 'activo' : ''} onClick={() => setTab('resumen')}>Resumen</button>
         <button className={tab === 'socios' ? 'activo' : ''} onClick={() => setTab('socios')}>Socios</button>
     	<button className={tab === 'pagos' ? 'activo' : ''} onClick={() => setTab('pagos')}>Pagos</button>
+    	{!esSuper && <button className={tab === 'estadisticas' ? 'activo' : ''} onClick={() => setTab('estadisticas')}>Estadísticas</button>}
     	<button className={tab === 'ejercicios' ? 'activo' : ''} onClick={() => setTab('ejercicios')}>Ejercicios</button>
     	<button className={tab === 'rutinas' ? 'activo' : ''} onClick={() => setTab('rutinas')}>Rutinas</button>
         <button className={tab === 'gimnasio' ? 'activo' : ''} onClick={() => setTab('gimnasio')}>Gimnasio</button>
@@ -101,6 +103,7 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
   	)}
 
       {tab === 'pagos' && <Pagos token={token} />}
+  	{tab === 'estadisticas' && <Estadisticas token={token} />}
       {tab === 'kiosco' && <Kiosco token={token} />}
       {tab === 'cobros' && <Cobros token={token} />}
       {tab === 'gimnasios' && esSuper && <Gimnasios token={token} />}
