@@ -3,6 +3,14 @@ import { API_URL } from './api';
 
 const soloNum = (v) => String(v || '').split('').filter((c) => c >= '0' && c <= '9').join('');
 
+// Avisa al agente de la notebook del gimnasio (solo escucha en 127.0.0.1).
+// Dispara el pedido y sigue: no espera respuesta. El token es el mismo del enlace del kiosco.
+function abrirPuerta(token) {
+  try {
+    fetch('http://127.0.0.1:8765/abrir?t=' + encodeURIComponent(token), { mode: 'no-cors' }).catch(function () {});
+  } catch (e) {}
+}
+
 export default function KioscoPublico() {
   const token = new URLSearchParams(window.location.search).get('k') || '';
   const [dni, setDni] = useState('');
@@ -30,7 +38,9 @@ export default function KioscoPublico() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: token, dni: soloNum(dni) }),
       });
-      setRes(await r.json());
+      const data = await r.json();
+      setRes(data);
+      if (data && data.permitido && data.puertaFisica) abrirPuerta(token);
     } catch (err) {
       setRes({ permitido: false, motivo: 'No hay conexión. Probá de nuevo.' });
     } finally {
