@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { API_URL } from './api';
+import './KioscoPublico.css';
 
 const soloNum = (v) => String(v || '').split('').filter((c) => c >= '0' && c <= '9').join('');
 
@@ -16,7 +17,27 @@ export default function KioscoPublico() {
   const [dni, setDni] = useState('');
   const [res, setRes] = useState(null);
   const [enviando, setEnviando] = useState(false);
+  const [info, setInfo] = useState(null);
+  const [ahora, setAhora] = useState(new Date());
   const ref = useRef(null);
+
+  useEffect(() => {
+    if (!token) return;
+    fetch(API_URL + '/api/kiosco/info?k=' + encodeURIComponent(token))
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d) {
+          setInfo(d);
+          if (d.nombre) document.title = d.nombre + ' - Ingreso';
+        }
+      })
+      .catch(() => {});
+  }, [token]);
+
+  useEffect(() => {
+    const t = setInterval(() => setAhora(new Date()), 15000);
+    return () => clearInterval(t);
+  }, []);
 
   useEffect(() => {
     if (ref.current) ref.current.focus();
@@ -49,25 +70,59 @@ export default function KioscoPublico() {
     }
   };
 
+  const nombreGym = info && info.nombre ? info.nombre : 'Ingreso';
+  const logo = info && info.logoUrl ? info.logoUrl : null;
+  const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+  const fecha = ahora.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+
   return (
-    <div className="checkin-wrap">
-      <div className="checkin-card">
-        <h1>Ingreso</h1>
+    <div className="kp-wrap">
+      <div className="kp-reloj">
+        <div className="kp-hora">{hora}</div>
+        <div className="kp-fecha">{fecha}</div>
+      </div>
+
+      <div className="kp-card">
+        <div className="kp-logo">
+          {logo ? <img src={logo} alt="" /> : <span>{nombreGym.trim().charAt(0).toUpperCase()}</span>}
+        </div>
+        <h1 className="kp-nombre">{nombreGym}</h1>
         {!token ? (
-          <p className="checkin-sub">Falta el enlace de ingreso. Pedile al gimnasio el enlace completo.</p>
+          <p className="kp-sub">Falta el enlace de ingreso. Pedile al gimnasio el enlace completo.</p>
         ) : (
           <form onSubmit={enviar}>
-            <p className="checkin-sub">Escribí tu DNI y tocá Enter</p>
-            <input ref={ref} className="campo" style={{ fontSize: 28, textAlign: 'center' }} inputMode="numeric" autoFocus placeholder="DNI" value={dni} onChange={(e) => setDni(e.target.value)} />
-            <button className="btn-pri" type="submit" disabled={enviando}>{enviando ? 'Verificando...' : 'Ingresar'}</button>
+            <p className="kp-sub">Escribí tu DNI y tocá Enter</p>
+            <input
+              ref={ref}
+              className="kp-input"
+              inputMode="numeric"
+              autoFocus
+              placeholder="Tu DNI"
+              value={dni}
+              onChange={(e) => {
+                setDni(soloNum(e.target.value));
+                if (res) setRes(null);
+              }}
+            />
+            <button className="kp-btn" type="submit" disabled={enviando}>
+              {enviando ? 'Verificando...' : 'Ingresar'}
+            </button>
           </form>
         )}
-        {res && (
-          <div className={'checkin-resultado ' + (res.permitido ? 'ok' : 'error')}>
-            {res.permitido ? '¡Bienvenido/a, ' + res.nombre + '!' : res.motivo + (res.nombre ? ' (' + res.nombre + ')' : '')}
-          </div>
-        )}
+        <p className="kp-pie">TuAccesoGym</p>
       </div>
+
+      {res && (
+        <div className={'kp-res ' + (res.permitido ? 'kp-ok' : 'kp-no')} onClick={() => setRes(null)}>
+          <div className="kp-res-icono">{res.permitido ? '✓' : '✕'}</div>
+          <div className="kp-res-titulo">
+            {res.permitido ? '¡Bienvenido/a, ' + res.nombre + '!' : res.motivo || 'No se pudo ingresar'}
+          </div>
+          {res.permitido && <div className="kp-res-sub">¡Buen entrenamiento!</div>}
+          {!res.permitido && res.nombre && <div className="kp-res-sub">{res.nombre}</div>}
+          <div className="kp-barra"><span /></div>
+        </div>
+      )}
     </div>
   );
 }
