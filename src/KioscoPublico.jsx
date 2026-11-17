@@ -12,6 +12,41 @@ function abrirPuerta(token) {
   } catch (e) {}
 }
 
+function Svg(props) {
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {props.children}
+    </svg>
+  );
+}
+
+const IconoSol = (
+  <Svg>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+  </Svg>
+);
+const IconoLuna = (
+  <Svg>
+    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+  </Svg>
+);
+const IconoExpandir = (
+  <Svg>
+    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+  </Svg>
+);
+const IconoContraer = (
+  <Svg>
+    <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+  </Svg>
+);
+const IconoCerrar = (
+  <Svg>
+    <path d="M6 6l12 12M18 6L6 18" />
+  </Svg>
+);
+
 export default function KioscoPublico() {
   const token = new URLSearchParams(window.location.search).get('k') || '';
   const [dni, setDni] = useState('');
@@ -19,6 +54,14 @@ export default function KioscoPublico() {
   const [enviando, setEnviando] = useState(false);
   const [info, setInfo] = useState(null);
   const [ahora, setAhora] = useState(new Date());
+  const [claro, setClaro] = useState(() => {
+    try {
+      return localStorage.getItem('kp-tema') === 'claro';
+    } catch (e) {
+      return false;
+    }
+  });
+  const [pantalla, setPantalla] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -40,6 +83,12 @@ export default function KioscoPublico() {
   }, []);
 
   useEffect(() => {
+    const f = () => setPantalla(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', f);
+    return () => document.removeEventListener('fullscreenchange', f);
+  }, []);
+
+  useEffect(() => {
     if (ref.current) ref.current.focus();
   }, [res]);
 
@@ -48,6 +97,28 @@ export default function KioscoPublico() {
     const t = setTimeout(() => setRes(null), 4000);
     return () => clearTimeout(t);
   }, [res]);
+
+  const cambiarTema = () => {
+    const nuevo = !claro;
+    setClaro(nuevo);
+    try {
+      localStorage.setItem('kp-tema', nuevo ? 'claro' : 'oscuro');
+    } catch (e) {}
+  };
+
+  const alternarPantalla = () => {
+    try {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    } catch (e) {}
+  };
+
+  const cerrar = () => {
+    if (window.confirm('¿Cerrar la pantalla de ingreso?')) window.close();
+  };
+
+  // Los botones de arriba no le sacan el foco al campo del DNI
+  const sinFoco = (e) => e.preventDefault();
 
   const enviar = async (e) => {
     e.preventDefault();
@@ -76,7 +147,19 @@ export default function KioscoPublico() {
   const fecha = ahora.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (
-    <div className="kp-wrap">
+    <div className={'kp-wrap' + (claro ? ' kp-claro' : '')}>
+      <div className="kp-tools">
+        <button type="button" className="kp-ico" title={claro ? 'Modo oscuro' : 'Modo claro'} onMouseDown={sinFoco} onClick={cambiarTema}>
+          {claro ? IconoLuna : IconoSol}
+        </button>
+        <button type="button" className="kp-ico" title={pantalla ? 'Salir de pantalla completa' : 'Pantalla completa'} onMouseDown={sinFoco} onClick={alternarPantalla}>
+          {pantalla ? IconoContraer : IconoExpandir}
+        </button>
+        <button type="button" className="kp-ico kp-ico-cerrar" title="Cerrar" onMouseDown={sinFoco} onClick={cerrar}>
+          {IconoCerrar}
+        </button>
+      </div>
+
       <div className="kp-reloj">
         <div className="kp-hora">{hora}</div>
         <div className="kp-fecha">{fecha}</div>
