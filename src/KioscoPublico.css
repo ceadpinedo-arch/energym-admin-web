@@ -236,3 +236,4 @@
   .kp-wrap { flex-direction: column; }
   .kp-res-titulo { font-size: 34px; }
 }
+.kp-wrap .kp-nombre { color: var(--kp-texto) !important; }
