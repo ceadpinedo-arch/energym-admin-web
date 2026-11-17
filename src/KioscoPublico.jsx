@@ -31,22 +31,6 @@ const IconoLuna = (
     <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
   </Svg>
 );
-const IconoExpandir = (
-  <Svg>
-    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
-  </Svg>
-);
-const IconoContraer = (
-  <Svg>
-    <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
-  </Svg>
-);
-const IconoCerrar = (
-  <Svg>
-    <path d="M6 6l12 12M18 6L6 18" />
-  </Svg>
-);
-
 export default function KioscoPublico() {
   const token = new URLSearchParams(window.location.search).get('k') || '';
   const [dni, setDni] = useState('');
@@ -61,7 +45,6 @@ export default function KioscoPublico() {
       return false;
     }
   });
-  const [pantalla, setPantalla] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -83,12 +66,6 @@ export default function KioscoPublico() {
   }, []);
 
   useEffect(() => {
-    const f = () => setPantalla(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', f);
-    return () => document.removeEventListener('fullscreenchange', f);
-  }, []);
-
-  useEffect(() => {
     if (ref.current) ref.current.focus();
   }, [res]);
 
@@ -104,17 +81,6 @@ export default function KioscoPublico() {
     try {
       localStorage.setItem('kp-tema', nuevo ? 'claro' : 'oscuro');
     } catch (e) {}
-  };
-
-  const alternarPantalla = () => {
-    try {
-      if (document.fullscreenElement) document.exitFullscreen();
-      else document.documentElement.requestFullscreen();
-    } catch (e) {}
-  };
-
-  const cerrar = () => {
-    if (window.confirm('¿Cerrar la pantalla de ingreso?')) window.close();
   };
 
   // Los botones de arriba no le sacan el foco al campo del DNI
@@ -149,14 +115,9 @@ export default function KioscoPublico() {
   return (
     <div className={'kp-wrap' + (claro ? ' kp-claro' : '')}>
       <div className="kp-tools">
-        <button type="button" className="kp-ico" title={claro ? 'Modo oscuro' : 'Modo claro'} onMouseDown={sinFoco} onClick={cambiarTema}>
+        <button type="button" className="kp-tema" onMouseDown={sinFoco} onClick={cambiarTema}>
           {claro ? IconoLuna : IconoSol}
-        </button>
-        <button type="button" className="kp-ico" title={pantalla ? 'Salir de pantalla completa' : 'Pantalla completa'} onMouseDown={sinFoco} onClick={alternarPantalla}>
-          {pantalla ? IconoContraer : IconoExpandir}
-        </button>
-        <button type="button" className="kp-ico kp-ico-cerrar" title="Cerrar" onMouseDown={sinFoco} onClick={cerrar}>
-          {IconoCerrar}
+          <span>{claro ? 'Modo oscuro' : 'Modo claro'}</span>
         </button>
       </div>
 
