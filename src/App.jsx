@@ -93,7 +93,7 @@ function Dashboard({ token, gimnasioInicial, onLogout }) {
         {esSuper && <button className={tab === 'gimnasios' ? 'activo' : ''} onClick={() => setTab('gimnasios')}>Gimnasios</button>}
       </nav>
 
-      {tab === 'resumen' && <Resumen token={token} />}
+      {tab === 'resumen' && <Resumen token={token} onIr={setTab} />}
 
   	{tab === 'socios' && (
     	<>
