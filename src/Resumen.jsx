@@ -15,6 +15,22 @@ function saludo() {
   return 'Buenas noches';
 }
 
+function Reloj() {
+  const [ahora, setAhora] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setAhora(new Date()), 10000);
+    return () => clearInterval(t);
+  }, []);
+  const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+  const dia = ahora.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+  return (
+    <div className="rs-reloj">
+      <strong>{hora}</strong>
+      <small>{dia}</small>
+    </div>
+  );
+}
+
 function Ico(props) {
   return (
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -234,6 +250,7 @@ export default function Resumen({ token, gimnasio, onIr }) {
             <h2>¡{saludo()}!</h2>
             <p>Esto es lo que pasa hoy en {nombreGym}.</p>
           </div>
+          <Reloj />
           <button type="button" className="rs-campana" onClick={ir('socios')} title="Ver alertas">
             {IcoCampana}
             {alertas > 0 && <span className="rs-badge">{alertas}</span>}

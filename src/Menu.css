@@ -76,3 +76,7 @@
   .side-item { width: auto; white-space: nowrap; padding: 10px 14px; }
   .app-shell > .dashboard.contenido { padding: 18px 14px; }
 }
+html, body { margin: 0; width: 100%; }
+body { display: block; }
+#root { max-width: none; width: 100%; margin: 0; padding: 0; }
+.app-shell { width: 100%; }
