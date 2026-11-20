@@ -445,3 +445,31 @@ html[data-theme="dark"] .apar .apar-op { background: transparent; border-color: 
 html[data-theme="dark"] .apar .apar-op.on { background: var(--brand); border-color: var(--brand); color: #fff; }
 html[data-theme="dark"] .apar .apar-reset { background: transparent; border: none; color: #e8e6f5; }
 html[data-theme="dark"] .apar .apar-sw { background-clip: padding-box; }
+
+/* apar-fix-v1 */
+.apar-pop { width: 300px !important; box-sizing: border-box; padding: 16px !important; }
+html[data-theme="light"] .apar-pop { background: #fff !important; }
+html[data-theme="dark"] .apar-pop { background: hsl(var(--h), 25%, 14%) !important; }
+.apar-t { margin: 14px 0 8px; }
+.apar-t:first-child { margin-top: 0; }
+.apar .apar-fila { display: flex; flex-wrap: nowrap; gap: 8px; align-items: center; }
+.apar .apar-fila:has(.apar-sw) { justify-content: space-between; }
+.apar .apar-op { flex: 1 1 0; min-width: 0; height: 38px; box-sizing: border-box; padding: 0 8px !important; display: flex; align-items: center; justify-content: center; white-space: nowrap; font-size: 13px; line-height: 1; }
+.apar .apar-sw { flex: 0 0 30px !important; width: 30px !important; min-width: 30px !important; max-width: 30px !important; height: 30px !important; min-height: 30px !important; max-height: 30px !important; aspect-ratio: 1 / 1; box-sizing: border-box; padding: 0 !important; border-radius: 50% !important; }
+.apar .apar-sw.on { outline: 2px solid var(--brand); outline-offset: 2px; }
+.apar .apar-reset { display: block; margin-top: 14px; }
+
+html .side { background: hsl(var(--h), 60%, 94%) !important; border-color: hsl(var(--h), 40%, 84%) !important; }
+html .side .side-item { color: hsl(var(--h), 25%, 28%) !important; }
+html .side .side-item:hover { background: hsl(var(--h), 60%, 87%) !important; color: var(--brand) !important; }
+html .side .side-item.activo { background: var(--brand) !important; color: #fff !important; }
+html .side .side-logo-img { background: #fff !important; }
+html .side .side-logo strong { color: var(--brand) !important; }
+
+/* panel-adaptable-v1: ayuda a que nada se salga de la pantalla */
+html, body { overflow-x: clip; }
+img, video, canvas { max-width: 100%; }
+@media (min-width: 901px) {
+  .app-shell { min-height: calc(100vh / var(--z, 1)); }
+  .app-shell .side { height: calc(100vh / var(--z, 1)) !important; }
+}

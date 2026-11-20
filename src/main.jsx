@@ -1,3 +1,4 @@
+import './escala.js'
 import KioscoPublico from './KioscoPublico.jsx';
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'

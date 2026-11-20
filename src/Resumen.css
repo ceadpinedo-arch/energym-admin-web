@@ -156,3 +156,10 @@
   .rs-wrap { grid-template-columns: minmax(0, 1fr); }
   .rs-lado { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 }
+
+/* rs-oscuro-v1 */
+html[data-theme="dark"] .rs-items li { background: hsl(var(--h), 22%, 18%) !important; border-color: hsl(var(--h), 22%, 26%) !important; color: #ece9fa !important; }
+html[data-theme="dark"] .rs-items .rs-item-txt { color: #ece9fa !important; }
+html[data-theme="dark"] .rs-items small { color: #b9b4d4 !important; }
+html[data-theme="dark"] .rs-items strong { color: #ffffff !important; }
+html[data-theme="dark"] .rs-items .rs-avatar { background: var(--brand) !important; color: #fff !important; }
